@@ -11,7 +11,7 @@ senior-dev-playbook/
 ├── README.md                          # Quick start & index
 ├── decision-frameworks/
 │   └── cotr-framework.md             # How to pitch technical decisions (COTR)
-├── traditional-fullstack/
+├── web-dev/
 │   ├── 01-rendering-strategies.md     # SPA vs SSR vs SSG vs ISR
 │   ├── 02-state-management.md         # Server State vs Client State vs URL
 │   ├── 03-api-architectures.md        # REST vs tRPC vs GraphQL vs WebSockets
