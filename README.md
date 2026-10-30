@@ -1,4 +1,4 @@
-# Senior Full-Stack & AI Engineering Playbook
+# Web Dev & AI Engineering Playbook
 
 A structured decision matrix, reference architecture, and actionable playbook for Devs.
 
