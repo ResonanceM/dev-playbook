@@ -1,6 +1,6 @@
 # Senior Full-Stack & AI Engineering Playbook
 
-A structured decision matrix, reference architecture, and actionable playbook for Senior Developers, Lead Engineers, and AI Architects. Designed to enable rapid decision-making, justify trade-offs to stakeholders, and provide instant links to production-grade GitHub repos, official docs, and tools.
+A structured decision matrix, reference architecture, and actionable playbook for Devs.
 
 ---
 
