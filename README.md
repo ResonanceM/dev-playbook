@@ -6,6 +6,7 @@ A structured decision matrix, reference architecture, and actionable playbook fo
 
 ## 📁 Playbook Structure
 
+```text
 senior-dev-playbook/
 ├── README.md                          # Quick start & master index
 ├── decision-frameworks/
@@ -34,7 +35,7 @@ senior-dev-playbook/
     ├── 01-llm-apis-prompt-engineering.md # Model Selection & Structured JSON Schemas
     ├── 02-rag-architecture.md         # RAG Pipelines & Vector DB Matrices
     └── 03-ai-agents-orchestration.md   # LangGraph, LlamaIndex & MCP Protocol
-
+```
 ---
 
 ## 🎯 How to Use This Playbook
