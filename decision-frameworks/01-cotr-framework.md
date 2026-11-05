@@ -7,11 +7,9 @@ Senior engineers don't just pick technologies—they justify trade-offs in busin
 ## 📐 The COTR Blueprint
 
 ### 1. Context
-*State the current business or technical problem clearly without jumping to solutions.*
 > *"As our dashboard user base scales, client-side data fetching across 30+ components is causing duplicate API calls, poor load times, and race conditions."*
 
 ### 2. Options
-*List 2–3 viable approaches you evaluated (including the status quo).*
 * **Option A:** Keep React Context + custom `useEffect` fetchers.
 * **Option B:** Introduce a global store like Redux Toolkit.
 * **Option C:** Adopt **TanStack Query (React Query)** for server state.
