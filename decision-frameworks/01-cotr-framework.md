@@ -1,30 +1,73 @@
-# COTR-ramverket för tekniska beslutsunderlag
+# COTR: Context, Options, Trade-offs, Recommendation
 
-När seniora utvecklare driver igenom tekniska förändringar eller arkitekturval räcker det inte att säga "tekniken är bra". Du måste motivera valet i affärsmässiga och tekniska termer. COTR står för **Context, Options, Trade-offs, Recommendation**.
+Use COTR to explain a technical choice in terms that engineering, product, security, operations, and leadership can evaluate. It is suitable for design reviews, proposals, and concise decision records.
 
----
+## 1. Context
 
-## 📐 COTR-byggstenarna i detalj
+Describe the observable problem before proposing a solution.
 
-### 1. Context (Kontext & Bakgrund)
-*Beskriv det exakta problemet utan att hoppa direkt till lösningen.*
-> *"När vår användarbas i dashboarden växer till över 50 000 aktiva användare per dag leder klientbaserad hämtning via `useEffect` över 30+ komponenter till dubblerade nätverksanrop, race conditions och långsam upplevelse."*
+Include:
+- User or business impact: who is affected and how often?
+- Current behavior and evidence: traces, incidents, support reports, benchmarks, or workflow observations.
+- Constraints: deadlines, team skills, budget, compliance, legacy dependencies, and platform boundaries.
+- Non-goals: what this decision will not solve.
+- Success measures: what changes if the decision works?
 
-### 2. Options (Utvärderade alternativ)
-*Lista 2–3 realistiska vägar framåt, inklusive att inte göra någonting (status quo).*
-* **Option A:** Optimera befintlig React Context och lägg till egna cachenycklar.
-* **Option B:** Införa en global applikationsstore som Redux Toolkit.
-* **Option C:** Migrera serverdatahanteringen till **TanStack Query (React Query)**.
+Avoid framing a technology preference as a business problem.
 
-### 3. Trade-offs Matrix (Konsekvensanalys)
+## 2. Options
 
-| Utvärderingskriterium | Option A (Context) | Option B (Redux) | Option C (TanStack Query) |
-| :--- | :--- | :--- | :--- |
-| **Implementeringstid** | Snabb | Låg till måttlig | Låg |
-| **Cachning & Invalidering** | Manuell / Oskalbar | Manuell i store | Automatisk (Stale-while-revalidate) |
-| **Bundle-påverkan** | 0 kB | ~11 kB | ~13 kB |
-| **Underhåll över tid** | Hög teknisk skuld | Måttlig | Minimal |
+List at least two viable approaches, including the status quo where relevant. Include a deliberately simpler option. Explain why apparently attractive alternatives were excluded.
 
-### 4. Recommendation (Slutgiltig rekommendation)
-*Formulera ett tydligt ställningstagande kopplat till affärsnytta.*
-> *"Jag rekommenderar **Option C (TanStack Query)**. Det eliminerar manuell cachehantering helt, minskar nätverkstrafiken genom automatisk deduplicering och frigör uppskattningsvis 15% utvecklingstid per sprint."*
+For each option, describe the operating model, migration path, dependencies, and failure modes—not just the happy path.
+
+## 3. Trade-off matrix
+
+Score options only when scoring helps discussion. Use a consistent scale and write down what each score means.
+
+| Dimension | Questions |
+|---|---|
+| User impact | Does it improve task completion, latency, or reliability? |
+| Delivery cost | How long to build, migrate, and validate? |
+| Operational burden | Who runs it? What new alerts, backups, and on-call work appear? |
+| Complexity | How many concepts, components, and failure modes are added? |
+| Security/privacy | Does it change trust boundaries, data exposure, or compliance scope? |
+| Performance/scale | What workload assumptions have been tested? |
+| Reversibility | How costly is it to change direction? |
+| Total cost | Infrastructure, licensing, engineering, support, and opportunity cost? |
+
+Do not use made-up precision such as an unsupported “15% productivity gain.” Label estimates, assumptions, and confidence.
+
+## 4. Recommendation
+
+State one recommendation, why it is the best fit now, the conditions under which it would change, and the first validation step.
+
+A strong recommendation sounds like:
+
+> Choose option B for the next release because it meets the required consistency and latency with the lowest migration risk. Keep the boundary behind an interface so that option C remains possible if measured throughput exceeds the current database's capacity.
+
+## Worked example: server-state management
+
+**Context:** Several screens independently fetch the same customer data, causing duplicated requests, inconsistent loading states, and ad hoc cache invalidation.
+
+**Options:** Keep local fetch hooks; use a general client store; adopt a server-state library; consolidate reads behind a backend-for-frontend.
+
+| Concern | Local hooks | General client store | Server-state library |
+|---|---|---|---|
+| Initial setup | Low | Medium/high | Low/medium |
+| Cache lifecycle | Hand-built | Hand-built or custom | Built-in primitives |
+| Mutations | Custom | Custom | Mutation/invalidation patterns |
+| Best fit | Few isolated reads | Complex shared client workflows | Remote data with caching needs |
+| Risk | Inconsistent duplication | Mixing server and UI state | Misconfigured cache semantics |
+
+**Recommendation:** Use a server-state library for remote data and keep transient UI state local or in a small client store. Define cache keys, freshness, invalidation, and optimistic-update rollback explicitly. Validate with network traces and tests; do not assume a library removes the need to understand consistency.
+
+## Review checklist
+
+- [ ] Problem is evidence-based and solution-independent.
+- [ ] Status quo and simpler options were considered.
+- [ ] Constraints and non-goals are explicit.
+- [ ] Trade-offs include operations, security, migration, and cost.
+- [ ] Recommendation is clear and falsifiable.
+- [ ] Risks have owners and mitigations.
+- [ ] Decision has a review trigger or expiry condition.

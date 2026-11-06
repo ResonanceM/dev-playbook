@@ -1,26 +1,52 @@
-# Analys, Produkttelemetri och GDPR-efterlevnad
+# Product Analytics, Event Taxonomy, and Privacy
 
-För att mäta om nya funktioner skapar affärsvärde krävs en ren och disciplinerad event-taxonomi.
+Product analytics explains how people use a product. It should complement—not replace—qualitative research, support feedback, and operational telemetry.
 
----
+## Start with decisions
 
-## 📐 Event Taxonomy (Navngivningsstandard)
+Before adding an event, state which product question it will answer and what decision could change. If no decision depends on the data, do not collect it.
 
-Använd konsekvent **[Entity] [Action]** med tillhörande egenskaper:
+## Event design
 
-```json
-// ✅ Rekommenderad struktur
-Event: "checkout_button_clicked"
-Properties: {
-  "user_id": "usr_9982",
-  "plan_type": "enterprise",
-  "currency": "SEK",
-  "value": 4995
-}
-```
+A consistent event contract may include:
+- `event_name` with stable naming such as `checkout_started`.
+- `event_version` for schema evolution.
+- `occurred_at` and ingestion timestamp.
+- `anonymous_id` or pseudonymous actor ID where appropriate.
+- `session_id` where justified.
+- `source` and application version.
+- Explicit properties with documented types and allowed values.
 
----
+Prefer past-tense business events over UI implementation events. Avoid names tied to button labels or component names.
 
-## 🛡️ Integritet och GDPR
-* **Samtyckeshantering:** Ladda aldrig tunga analys- eller spårningsskript (Google Analytics, Mixpanel, Meta Pixel) innan användaren har gett aktivt samtycke via en Consent Management Platform (CMP).
-* **Anonymisering:** Hasha IP-adresser och undvik att skicka känsliga personuppgifter i custom properties.
+## Taxonomy example
+
+| Event | Trigger | Useful properties |
+|---|---|---|
+| `trial_started` | Trial is successfully created | plan, acquisition channel |
+| `invoice_created` | Invoice persistence succeeds | currency, item_count |
+| `payment_failed` | Payment provider reports failure | safe failure category |
+| `report_exported` | Export is ready | format, row_count_band |
+
+Do not send raw emails, names, payment details, secrets, or free-text fields by default.
+
+## Data quality
+
+Validate schemas, required fields, event volume, duplicate behavior, and identity stitching. Define whether events are emitted client-side, server-side, or both. Server-side events are usually more authoritative for completed business actions.
+
+## Privacy and governance
+
+Apply data minimization, purpose limitation, retention limits, access controls, consent/opt-out requirements, and deletion workflows according to applicable law and policy. Pseudonymous identifiers may still be personal data. Involve privacy/legal experts for jurisdiction-specific interpretation.
+
+## Analytics versus observability
+
+Product analytics measures user behavior and outcomes. Observability measures system health and request behavior. Keep separate access controls, retention, sampling, and naming conventions where needs differ.
+
+## Checklist
+
+- [ ] Every event answers a defined question.
+- [ ] Event owner and schema are documented.
+- [ ] Schema validation and versioning exist.
+- [ ] Sensitive data is excluded or explicitly governed.
+- [ ] Consent, retention, deletion, and access are addressed.
+- [ ] Business-critical events are emitted from authoritative sources.

@@ -1,25 +1,51 @@
-# Hantering och förhandling av teknisk skuld (EM Playbook)
+# Technical Debt: Identify, Quantify, and Pay Down Deliberately
 
-Teknisk skuld är inte ett fult ord – det är ett finansiellt lån som tagits för att accelerera tid till marknad. Som Engineering Manager (EM) gäller det att hantera det strukturerat.
+Technical debt is a trade-off that creates future cost or risk. Not all shortcuts are harmful; debt becomes dangerous when its interest is invisible or unmanaged.
 
----
+## Debt taxonomy
 
-## 📊 Teknisk skuld-taxonomi
+- **Deliberate/prudent:** conscious shortcut with a repayment plan.
+- **Deliberate/reckless:** knowingly skips essential design or quality controls.
+- **Inadvertent/prudent:** learning reveals a better design after implementation.
+- **Inadvertent/reckless:** poor understanding or weak engineering practice creates avoidable complexity.
 
-1. **Deliberate & Prudent (Medveten & Prudentlig):**
-   * *Exempel:* "Vi skippar testsviten för denna funktion för att hinna till mässan på torsdag, men vi vet exakt var skuld har skapats."
-   * *Åtgärd:* Planera in återbetalning i nästa sprint.
-2. **Accidental & Legacy (Oavsiktlig & Föråldrad):**
-   * *Exempel:* Kodbasen växte från en monolit till mikroservrar utan att gränserna rätades ut; arkitekturen matchar inte dagens krav.
-   * *Åtgärd:* Refaktorera inkrementellt i samband med att nya funktioner byggs i samma modul.
-3. **Bit Rot (Mjukvaruröta):**
-   * *Exempel:* Beroenden, ramverksversioner eller Node-runtimes som når EOL (End of Life) och drar med sig säkerhetsrisker.
-   * *Åtgärd:* Dedikera en fast andel av kapaciteten till uppgraderingar.
+Also classify debt by domain: architecture, code, tests, data, security, infrastructure, dependencies, documentation, and operational process.
 
----
+## Prioritization
 
-## ⚖️ Den gyllene 20%-regeln för teknikalisering
-Förhandla med produktchefen (PM) om en fast fördelning av teamets totala kapacitet:
-* **70% Feature Velocity:** Kundvärde och nya funktioner.
-* **20% Architecture & Tech Debt:** Refaktorisering, uppgraderingar, prestanda och testtäckning.
-* **10% Innovation & Spikes:** R&D, utforskande av nya verktyg och AI-experiment.
+Assess:
+- User/business impact.
+- Frequency of change in the affected area.
+- Delivery drag and rework.
+- Incident/security/compliance exposure.
+- Cost of remediation and migration risk.
+- Confidence in the evidence.
+
+A useful heuristic is debt interest: how much extra time, risk, or incident cost does this debt create each time the team touches the area?
+
+## Portfolio approach
+
+Do not apply a universal “20% rule” without evidence. Reserve capacity based on observed maintenance burden, risk, and strategic investment. Combine:
+- Opportunistic cleanup in touched code.
+- Targeted remediation for high-interest debt.
+- Planned platform/architecture investments.
+- Mandatory security and lifecycle work.
+
+## Negotiating with product
+
+Translate debt into consequences: slower lead time, higher defect probability, support burden, outage exposure, or inability to meet a product requirement. Offer options: pay now, contain risk, or accept a documented consequence.
+
+## Debt register
+
+| Item | Impact/interest | Evidence | Remediation | Cost | Owner | Review |
+|---|---|---|---|---|---|---|
+| Unsupported runtime | Security and upgrade risk | Vendor lifecycle | Upgrade in stages | M | Platform | Quarterly |
+
+Keep the register small and actionable. Archive items that no longer matter.
+
+## Guardrails
+
+- Do not label every refactor “debt.”
+- Do not optimize code without a user, reliability, security, or delivery reason.
+- Do not defer end-of-life dependencies indefinitely.
+- Track outcomes after remediation.

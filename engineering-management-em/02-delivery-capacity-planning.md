@@ -1,24 +1,35 @@
-# Kapacitetsplanering, Järntriangeln och Buffertar
+# Delivery Capacity and Planning
 
-Som EM är ditt primära ansvar att skydda teamet från utbrändhet samtidigt som du levererar förutsägbara resultat till affären.
+Planning is a model of uncertainty, not a promise that every estimate will be exact.
 
----
+## Capacity
 
-## 📐 Järntriangeln (Scope, Tid, Resurser)
+Start with actual available working time after leave, support, on-call, meetings, maintenance, and other commitments. Use historical throughput or cycle time where possible. Avoid planning every person at 100% utilization; high utilization increases queues and makes delivery less predictable.
 
-```text
-               Scope (Innehåll)
-                /               /                /        Resurser ────── Tid (Deadline)
-```
+A buffer is a risk response, not a fixed universal percentage. Size it from historical variance, dependency uncertainty, and novelty.
 
-* **Regeln:** Du kan bara hålla två hörn låsta. Om *Tid* (exakt datum för release) och *Resurser* (teamets storlek) är fasta, **måste Scope vara variabelt**. Det är ditt jobb att kommunicera detta till intressenterna i tid.
+## Decompose work
 
----
+Prefer vertical slices that produce testable outcomes. Separate discovery, implementation, migration, security review, rollout, and operational readiness when they have distinct risks.
 
-## 📊 Formel för verklig sprintkapacitet
+Break large items until:
+- Acceptance criteria are clear.
+- Dependencies are visible.
+- Work can be reviewed and tested independently.
+- Progress can be demonstrated within a short feedback loop.
 
-Basera aldrig kapaciteten på 100% fokuserade utvecklingstimmar. Använd följande modell:
+## Estimation
 
-$$	ext{Reell Kapacitet} = (	ext{Utvecklare} 	imes 	ext{Arbetsdagar}) - (	ext{Semester/PTO} + 	ext{On-Call Jour} + 	ext{Möten} + 	ext{Context Switching})$$
+Use ranges and confidence levels. State assumptions. For novel work, time-box discovery or a spike and update the estimate with evidence. Avoid converting estimates into individual performance commitments.
 
-* **80%-buffertregeln:** Planera aldrig mer än 80% av teoretisk maxkapacitet. Resterande 20% äts upp av ad-hoc-frågor, code reviews och smärre incidenter i produktion.
+## Dependency management
+
+Identify external teams, vendors, data migrations, approvals, environments, and release windows. Assign owners and dates to critical dependencies. Reduce coordination by agreeing contracts early and using mocks/contract tests.
+
+## Flow metrics
+
+Track lead time, cycle time, throughput, work in progress, blocked time, and escaped defects. Use trends to improve the system; do not use metrics to rank individuals.
+
+## Delivery review
+
+At each checkpoint ask: what changed, what is blocked, what risk increased, what can be de-scoped, and what evidence changes the forecast?

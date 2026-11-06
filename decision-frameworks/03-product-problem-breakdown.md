@@ -1,39 +1,81 @@
-# 6-stegs ramverk för problemnedbrytning (Software Product Decomposition)
+# Product Problem Decomposition: From Ambiguity to Delivery
 
-När du står inför ett komplext eller luddigt produktproblem ska du inte börja skriva kod direkt. Följ denna sexstegsprocess för att säkerställa att alla tekniska, affärsmässiga och operationella aspekter täcks in.
+A repeatable way to turn an ambiguous request into a coherent, testable engineering plan.
 
----
+## The six stages
 
-## 🔍 De 6 stegen i detalj
+### 1. Problem and outcome
+- Who experiences the problem?
+- What job are they trying to complete?
+- What evidence shows this matters?
+- What is the baseline and desired outcome?
+- What is explicitly out of scope?
 
-### Steg 1: Problem & Scope (Avgränsning)
-* **Kärnvärde:** Exakt vilken användarfriktion eliminerar vi?
-* **Explicita icke-mål:** Vad ska vi *inte* göra i denna version? (Ex: "Vi bygger realtidschatt i v1, men avstår från filöverföringar").
-* **Yttre ramar:** Deadlines, regulatoriska krav och budget.
+Write an outcome statement, not a feature prescription. Example: “Reduce failed invoice submissions for first-time users,” rather than “Add a wizard.”
 
-### Steg 2: Functional Specs & Edge Cases (Funktionella krav)
-* **Huvudflöde:** Det gyllene flödet från start till mål.
-* **Kritiska kantfall (Edge Cases):**
-  * Nätverksavbrott mitt i en transaktion (offline-läge).
-  * Samtidiga uppdateringar från flera användare (race conditions / optimisternas lås).
-  * Tomma tillstånd (Empty states), laddningsskelett (skeletons) och felmeddelanden.
+### 2. User journeys and functional behavior
+Map entry points, actors, permissions, happy paths, alternate paths, and terminal states. Define acceptance criteria in observable terms.
 
-### Steg 3: Technical NFRs (Icke-funktionella krav)
-* **Prestandabudget:** Maximal tillåten $p95$-latens (t.ex. $< 200	ext{ms}$) och max storlek på JS-bundle.
-* **Skalbarhet & Last:** Förväntat antal QPS (Queries Per Second) vid toppar.
-* **Säkerhet & Compliance:** Rollbaserad behörighet (RBAC), HttpOnly-cookies, CSP-huvuden och GDPR-krav.
+Include empty, loading, stale, partial, duplicate, offline, timeout, cancellation, and permission-denied states. Consider concurrent edits and repeated submissions.
 
-### Steg 4: System Architecture (Systemarkitektur)
-* **Rendering:** SPA vs. SSR vs. ISR baserat på SEO-krav och dynamiskt innehåll.
-* **State Taxonomy:** Strikt uppdelning mellan Server State (TanStack Query), Client UI State (Zustand) och URL State.
-* **API-protokoll:** tRPC för fullstack-monorepos, REST för publika integrationer, WebSockets för realtid.
+### 3. Non-functional requirements
+Specify measurable expectations for:
+- Latency: user-perceived and service-side percentiles.
+- Availability and durability: which operations must work, and what data loss is tolerable?
+- Scale: normal, peak, burst, and growth assumptions.
+- Security/privacy: data classification, authorization, retention, residency, audit.
+- Accessibility: keyboard, screen reader, contrast, motion, and semantic structure.
+- Operability: ownership, alerts, dashboards, support, and recovery objectives.
 
-### Steg 5: Operations & Telemetry (Drift & Mätbarhet)
-* **Felhantering:** Lokala React Error Boundaries så att ett trasigt widget-kort inte kraschar hela skärmen.
-* **Strukturerade loggar:** JSON-loggar med `trace_id` och bortrensning av känslig PII-data.
-* **Produktanalys:** Event-taxonomi enligt `[Entity] [Action]` (t.ex. `invoice_created`).
+### 4. Architecture and data
+Define boundaries, responsibilities, contracts, source of truth, state ownership, data lifecycle, and integration patterns. Draw a context diagram and sequence diagram for the riskiest flow.
 
-### Steg 6: Delivery & Risk Management (Leverans & WBS)
-* **Work Breakdown Structure:** Bryt ner i pull requests som vardera är under 250 rader kod.
-* **Riskklassificering:** Identifiera Type 1 vs Type 2-risker.
-* **Kapacitetsbuffert:** Applicera 20% buffert för oförutsedd teknisk skuld.
+### 5. Operations and measurement
+Specify logs, metrics, traces, product analytics, feature flags, dashboards, alerts, support procedures, and rollout strategy. Keep operational telemetry distinct from product analytics.
+
+### 6. Delivery and risk
+Break work into vertical slices that produce user-visible or independently verifiable value. Identify dependencies, critical path, migration steps, test environments, unknowns, and rollback constraints.
+
+## Acceptance criteria
+
+Prefer examples that can be tested:
+
+**Given** an authenticated user with permission to edit an invoice  
+**When** they submit a valid invoice  
+**Then** the invoice is persisted once, a confirmation is shown, and a retry does not create a duplicate.
+
+Define behavior for invalid input, expired sessions, duplicate requests, and partial downstream failure too.
+
+## Risk-first planning
+
+Rank unknowns by impact and uncertainty. Prototype the highest-risk assumptions early: external API behavior, data migration duration, authorization model, peak throughput, model quality, or vendor limitations.
+
+Use a risk register:
+
+| Risk | Likelihood | Impact | Signal | Mitigation | Owner |
+|---|---|---|---|---|---|
+| Migration lock contention | Medium | High | Long-running DDL in staging | Online migration and rehearsal | Backend lead |
+| Vendor rate limit | High | Medium | 429 responses in load test | Backoff, queue, quota agreement | Integrations owner |
+
+## Example: collaborative invoice editing
+
+**Outcome:** Reduce handoff time and conflicting edits for finance teams.
+
+**Phase 1 scope:** Presence and concurrent field updates. Non-goals: rich text collaboration, full version history, offline merge.
+
+**Design questions:** Who owns conflict resolution? Are updates last-write-wins, field-level versioned, or CRDT-based? What is the consistency expectation? How are reconnects and authorization handled?
+
+**Delivery slices:** permissioned session join → persisted versioned updates → presence → reconnect/recovery → progressive rollout.
+
+**Release gates:** concurrency tests, audit coverage, reconnect tests, latency dashboard, support runbook, and rollback plan.
+
+## Ready-for-build checklist
+
+- [ ] User problem, evidence, outcome, and non-goals are clear.
+- [ ] Primary and failure journeys are mapped.
+- [ ] Acceptance criteria are testable.
+- [ ] NFRs have measurable targets and workload assumptions.
+- [ ] Data ownership, permissions, and lifecycle are defined.
+- [ ] Integration contracts and dependencies are known.
+- [ ] Highest-risk assumptions have validation plans.
+- [ ] Observability, rollout, and rollback are planned.
