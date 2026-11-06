@@ -1,7 +1,3 @@
-# Product Management: Feature Prioritization & ROI Matrix
+# Feature Prioritization
 
----
-
-## 📊 RICE Prioritization Model
-
-$$	ext{RICE Score} = rac{	ext{Reach} 	imes 	ext{Impact} 	imes 	ext{Confidence}}{	ext{Effort}}$$
+RICE and MoSCoW frameworks.

@@ -1,1 +1,3 @@
-# AI Engineering: LLM Integration & Prompt Architecture
+# LLM APIs & Prompt Engineering
+
+Structured JSON outputs (Pydantic/Zod).

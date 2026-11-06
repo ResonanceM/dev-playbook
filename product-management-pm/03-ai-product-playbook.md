@@ -1,7 +1,3 @@
-# AI Product Management: Economics, Latency & Evals
+# AI Product Playbook
 
----
-
-## 💰 LLM Economics & Unit Cost Calculation
-
-$$	ext{Cost Per Query} = (	ext{Input Tokens} 	imes 	ext{Cost}_{	ext{input}}) + (	ext{Output Tokens} 	imes 	ext{Cost}_{	ext{output}})$$
+LLM unit economics and evals.
