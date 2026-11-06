@@ -1,87 +1,39 @@
-# Software Product Problem Decomposition Framework
+# 6-stegs ramverk för problemnedbrytning (Software Product Decomposition)
 
-A structured, 6-stage blueprint for Software Experts, Technical Leads, and Project Managers to deconstruct complex, ambiguous product problems into execution-ready engineering tasks while addressing all technical and operational dimensions.
-
----
-
-## 🧭 The 6-Stage Problem Breakdown Pipeline
-
-```text
-┌───────────────────────────┐
-│ Stage 1: Problem & Scope  │ Define core outcome, non-goals, and boundary conditions
-└─────────────┬─────────────┘
-              ▼
-┌───────────────────────────┐
-│ Stage 2: Functional Specs │ Map user journeys, data flow, state changes & edge cases
-└─────────────┬─────────────┘
-              ▼
-┌───────────────────────────┐
-│ Stage 3: Technical NFRs   │ Latency, scalability, security, availability & resilience
-└─────────────┬─────────────┘
-              ▼
-┌───────────────────────────┐
-│ Stage 4: System Architecture│ Rendering, API protocols, state taxonomy & database schemas
-└─────────────┬─────────────┘
-              ▼
-┌───────────────────────────┐
-│ Stage 5: Ops & Telemetry  │ Observability, error boundaries, analytics & rollout flags
-└─────────────┬─────────────┘
-              ▼
-┌───────────────────────────┐
-│ Stage 6: Delivery & Risk  │ Work breakdown (WBS), dependencies, buffers & type 1/2 risks
-└───────────────────────────┘
-```
+När du står inför ett komplext eller luddigt produktproblem ska du inte börja skriva kod direkt. Följ denna sexstegsprocess för att säkerställa att alla tekniska, affärsmässiga och operationella aspekter täcks in.
 
 ---
 
-## 🔍 Detailed Checklist Across Dimensions
+## 🔍 De 6 stegen i detalj
 
-### Stage 1: Problem & Scope Definition
-- [ ] **Core User Value:** What specific user pain point does this solve?
-- [ ] **Business Impact:** How does this move company metrics (ARR, conversion, retention, latency)?
-- [ ] **Explicit Non-Goals:** What are we deliberately **NOT** building in this version?
-- [ ] **Constraints:** Fixed deadlines, compliance/legal boundaries, budget caps.
+### Steg 1: Problem & Scope (Avgränsning)
+* **Kärnvärde:** Exakt vilken användarfriktion eliminerar vi?
+* **Explicita icke-mål:** Vad ska vi *inte* göra i denna version? (Ex: "Vi bygger realtidschatt i v1, men avstår från filöverföringar").
+* **Yttre ramar:** Deadlines, regulatoriska krav och budget.
 
-### Stage 2: Functional Specs & Edge Cases
-- [ ] **Primary User Flow:** Step-by-step user journey from entry to success state.
-- [ ] **Edge Cases & Failure Modes:**
-  - Network loss / Offline mode behavior.
-  - Partial API failures or timeout states.
-  - Concurrent user edits / race conditions.
-  - Empty states, loading skeletons, and multi-tenant data isolation.
+### Steg 2: Functional Specs & Edge Cases (Funktionella krav)
+* **Huvudflöde:** Det gyllene flödet från start till mål.
+* **Kritiska kantfall (Edge Cases):**
+  * Nätverksavbrott mitt i en transaktion (offline-läge).
+  * Samtidiga uppdateringar från flera användare (race conditions / optimisternas lås).
+  * Tomma tillstånd (Empty states), laddningsskelett (skeletons) och felmeddelanden.
 
-### Stage 3: Non-Functional Requirements (NFRs)
-- [ ] **Performance Budget:** Target $p95$ response time, max initial JS payload size.
-- [ ] **Scalability:** Peak QPS (queries per second), data growth per month.
-- [ ] **Availability & Reliability:** Target SLO (e.g., 99.9% uptime), circuit breaker thresholds.
-- [ ] **Security & Compliance:** Auth/AuthZ roles, HttpOnly cookies, CSP headers, GDPR PII scrubbing.
+### Steg 3: Technical NFRs (Icke-funktionella krav)
+* **Prestandabudget:** Maximal tillåten $p95$-latens (t.ex. $< 200	ext{ms}$) och max storlek på JS-bundle.
+* **Skalbarhet & Last:** Förväntat antal QPS (Queries Per Second) vid toppar.
+* **Säkerhet & Compliance:** Rollbaserad behörighet (RBAC), HttpOnly-cookies, CSP-huvuden och GDPR-krav.
 
-### Stage 4: Architectural Selection (The Senior Stack Choices)
-- [ ] **Rendering & UI Strategy:** SPA vs. SSR vs. SSG vs. ISR.
-- [ ] **State Taxonomies:** Separate Server State (TanStack Query), Client State (Zustand), and URL State.
-- [ ] **API Paradigm:** REST vs. tRPC vs. GraphQL vs. WebSockets.
-- [ ] **Data Model:** SQL vs. NoSQL schema, index optimization, vector database requirements (if AI).
+### Steg 4: System Architecture (Systemarkitektur)
+* **Rendering:** SPA vs. SSR vs. ISR baserat på SEO-krav och dynamiskt innehåll.
+* **State Taxonomy:** Strikt uppdelning mellan Server State (TanStack Query), Client UI State (Zustand) och URL State.
+* **API-protokoll:** tRPC för fullstack-monorepos, REST för publika integrationer, WebSockets för realtid.
 
-### Stage 5: Production Operations & Telemetry
-- [ ] **Error Boundaries:** Scope UI boundaries to prevent full-page crashes.
-- [ ] **Structured Logging:** Standardized JSON format (`timestamp`, `trace_id`, `level`).
-- [ ] **Observability:** OpenTelemetry traces across client-to-server boundaries.
-- [ ] **Analytics Taxonomy:** `[Entity] [Action]` event naming conventions (e.g., `checkout_started`).
-- [ ] **Feature Flag Strategy:** Dark launch, progressive rollouts (1% -> 10% -> 100%).
+### Steg 5: Operations & Telemetry (Drift & Mätbarhet)
+* **Felhantering:** Lokala React Error Boundaries så att ett trasigt widget-kort inte kraschar hela skärmen.
+* **Strukturerade loggar:** JSON-loggar med `trace_id` och bortrensning av känslig PII-data.
+* **Produktanalys:** Event-taxonomi enligt `[Entity] [Action]` (t.ex. `invoice_created`).
 
-### Stage 6: Delivery, WBS & Risk Management
-- [ ] **Work Breakdown Structure (WBS):** Slice epic into decoupled, testable pull requests ($< 250	ext{ lines}$).
-- [ ] **Dependency Mapping:** Third-party vendor dependencies, backend API Readiness.
-- [ ] **Risk Classification:** Identify Type 1 (Irreversible) vs. Type 2 (Reversible) decisions.
-- [ ] **Capacity Buffer:** Apply the 20% capacity buffer rule for unknown technical risks.
-
----
-
-## 🗣️ Communication Template for Alignment Meetings
-
-> **Problem:** *"We need to add real-time collaborative editing to our invoice builder."*  
-> **Decomposition Pitch:**  
-> 1. **Scope:** *Phase 1 is limited to concurrent field editing; version history is a non-goal.*  
-> 2. **Architecture:** *We use WebSockets for real-time deltas and URL State for session joining.*  
-> 3. **Resilience:** *If the socket connection drops, fallback gracefully to optimistic polling via REST and preserve local drafts.*  
-> 4. **Delivery:** *3-phase rollout behind a PostHog feature flag starting with internal beta users.*
+### Steg 6: Delivery & Risk Management (Leverans & WBS)
+* **Work Breakdown Structure:** Bryt ner i pull requests som vardera är under 250 rader kod.
+* **Riskklassificering:** Identifiera Type 1 vs Type 2-risker.
+* **Kapacitetsbuffert:** Applicera 20% buffert för oförutsedd teknisk skuld.
