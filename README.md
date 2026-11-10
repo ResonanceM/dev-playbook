@@ -20,6 +20,7 @@ This is a decision aid, not a collection of universal rules. Treat numeric targe
 | `decision-frameworks/` | Problem framing, architecture choices, RFCs, ADRs, and decomposition |
 | `web-dev/` | Frontend architecture, APIs, security, performance, testing, data, and operations |
 | `ai-engineering/` | LLM applications, RAG, agents, evaluation, safety, and economics |
+| `ai-skills-stack/` | LLM applications, RAG, agents, evaluation, safety, and economics |
 | `product-management-pm/` | Prioritization, product requirements, SLOs, and AI product strategy |
 | `engineering-management-em/` | Technical debt, capacity, DevEx, delivery, and team operating systems |
 | `platform-devops/` | CI/CD, infrastructure, cloud architecture, and release engineering |
