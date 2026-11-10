@@ -1,6 +1,6 @@
 # Tech Playbook
 
-A practical, opinionated-but-contextual handbook for engineers designing, building, shipping, and operating reliable software. It is intended for senior engineers, staff/principal engineers, tech leads, engineering managers, and product-minded developers.
+A practical, opinionated-but-contextual handbook for engineers designing, building, shipping, and operating reliable software. It is intended for people working in tech.
 
 This is a decision aid, not a collection of universal rules. Treat numeric targets as starting hypotheses; validate them against user needs, workload, risk, team capability, and cost.
 
