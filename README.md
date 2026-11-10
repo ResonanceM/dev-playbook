@@ -1,4 +1,4 @@
-# Senior Software Engineering Playbook
+# Tech Playbook
 
 A practical, opinionated-but-contextual handbook for engineers designing, building, shipping, and operating reliable software. It is intended for senior engineers, staff/principal engineers, tech leads, engineering managers, and product-minded developers.
 
